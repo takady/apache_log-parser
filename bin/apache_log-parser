@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+require 'apache_log/parser'
+require 'json'
+
+file = ARGV[0]
+
+entity = []
+File.foreach(file) do |line|
+  entity << ApacheLog::Parser::Combined.parse(line.chomp)
+end
