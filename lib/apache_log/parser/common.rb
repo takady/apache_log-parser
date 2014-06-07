@@ -2,7 +2,7 @@ module ApacheLog
   module Parser
     class Common
       def initialize(args)
-        @ip_address     = args[:ip_address]
+        @remote_host    = args[:remote_host]
         @identity_check = args[:identity_check]
         @user           = args[:user]
         @datetime       = args[:datetime]
@@ -11,7 +11,7 @@ module ApacheLog
         @size           = args[:size]
       end
 
-      attr_reader :ip_address, :identity_check, :user, :datetime, :request, :status, :size
+      attr_reader :remote_host, :identity_check, :user, :datetime, :request, :status, :size
 
       def self.parse(line)
         match = log_pattern.match(line)
@@ -19,7 +19,7 @@ module ApacheLog
 
         columns = match.to_a.values_at(1..7)
         self.new({
-          :ip_address      => columns[0],
+          :remote_host     => columns[0],
           :identity_check  => columns[1],
           :user            => columns[2],
           :datetime        => parse_datetime(columns[3]),
@@ -31,7 +31,7 @@ module ApacheLog
 
       def self.log_pattern
         /^
-          (\S+)                                      # ip_address
+          (\S+)                                     # remote_host
           \s+
           (\S+)                                  # identity_check
           \s+
