@@ -1,36 +1,24 @@
 module ApacheLog
   module Parser
     class Combined
-      def initialize(args)
-        @remote_host    = args[:remote_host]
-        @identity_check = args[:identity_check]
-        @user           = args[:user]
-        @datetime       = args[:datetime]
-        @request        = args[:request]
-        @status         = args[:status]
-        @size           = args[:size]
-        @referer        = args[:referer]
-        @user_agent     = args[:user_agent]
+      def initialize
       end
-
-      attr_reader :remote_host, :identity_check, :user, :datetime, :request, :status, :size, :referer, :user_agent
 
       def self.parse(line)
         match = log_pattern.match(line)
         raise "parse error\n at line: <#{line}> \n" if match.nil?
-
         columns = match.to_a.values_at(1..9)
-        self.new({
-          :remote_host     => columns[0],
-          :identity_check  => columns[1],
-          :user            => columns[2],
-          :datetime        => parse_datetime(columns[3]),
-          :request         => parse_request(columns[4]),
-          :status          => columns[5],
-          :size            => columns[6],
-          :referer         => columns[7],
-          :user_agent      => columns[8],
-        })
+        {
+          remote_host:    columns[0],
+          identity_check: columns[1],
+          user:           columns[2],
+          datetime:       parse_datetime(columns[3]),
+          request:        parse_request(columns[4]),
+          status:         columns[5],
+          size:           columns[6],
+          referer:        columns[7],
+          user_agent:     columns[8],
+        }
       end
 
       def self.log_pattern
