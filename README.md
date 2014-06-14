@@ -19,7 +19,7 @@ Or install it yourself as:
 ## Usage
 
 ```ruby
-require 'apache_log-parser'
+require 'apache_log/parser'
 
 parser = ApacheLog::Parser.getParser(format)
 entity = []

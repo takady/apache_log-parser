@@ -1,3 +1,5 @@
+require 'date'
+
 module ApacheLog
   module Parser
     class Format
