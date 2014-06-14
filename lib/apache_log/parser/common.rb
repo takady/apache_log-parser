@@ -1,6 +1,8 @@
+require "apache_log/parser/format"
+
 module ApacheLog
   module Parser
-    class Common
+    class Common < Format
       def initialize
       end
 
@@ -13,7 +15,7 @@ module ApacheLog
           remote_host:    columns[0],
           identity_check: columns[1],
           user:           columns[2],
-          datetime:       parse_datetime(columns[3]),
+          datetime:       to_datetime(columns[3]),
           request:        parse_request(columns[4]),
           status:         columns[5],
           size:           columns[6],
@@ -38,20 +40,7 @@ module ApacheLog
         $/x
       end
 
-      def self.parse_datetime(str)
-        DateTime.strptime( str, '%d/%b/%Y:%T %z')
-      end
-
-      def self.parse_request(str)
-        method, path, protocol = str.split
-        {
-          :method   => method,
-          :path     => path,
-          :protocol => protocol
-        }
-      end
-
-      private_class_method :log_pattern, :parse_datetime, :parse_request
+      private_class_method :log_pattern
     end
 
   end
