@@ -21,4 +21,5 @@ tmp
 *.a
 mkmf.log
 bin/
+vendor/
 apache_log-parser-*
