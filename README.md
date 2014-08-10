@@ -29,13 +29,13 @@ common_log[:request]        #=> request
 
 # combined format
 common_log = ApacheLog::Parser.parse(log_line, 'combined')
-common_log[:referer]        #=> remote host
-common_log[:user_agent]     #=> datetime
+common_log[:referer]        #=> referer
+common_log[:user_agent]     #=> user_agent
 
 # custom format(additional fields after 'combined')
 # custom format: LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%v\" \"%{cookie}n\" %D"
 common_log = ApacheLog::Parser.parse(log_line, 'combined', %w(vhost usertrack request_duration))
-common_log[:user_agent]        #=> datetime
+common_log[:user_agent]        #=> user_agent
 common_log[:vhost]             #=> vhost
 common_log[:usertrack]         #=> usertrack
 common_log[:request_duration]  #=> request_duration

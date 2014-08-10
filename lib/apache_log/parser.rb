@@ -1,4 +1,5 @@
-require "apache_log/parser/version"
+require 'apache_log/parser/version'
+require 'date'
 
 module ApacheLog
   module Parser
