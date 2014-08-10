@@ -7,9 +7,10 @@ describe ApacheLog::Parser do
   end
 
   it 'can parse common format log' do
-    parser = ApacheLog::Parser.getParser('common')
+    parser = ApacheLog::Parser
+    format = 'common'
     line = '127.0.0.1 - - [20/May/2014:20:04:04 +0900] "GET /test/indx.html HTTP/1.1" 200 4576'
-    entity = parser.parse(line.chomp)
+    entity = parser.parse(line.chomp, format)
 
     expect = {
       remote_host:    '127.0.0.1',
@@ -29,9 +30,10 @@ describe ApacheLog::Parser do
   end
 
   it 'can parse combined format log' do
-    parser = ApacheLog::Parser.getParser('combined')
+    parser = ApacheLog::Parser
+    format = 'combined'
     line = '104.24.160.39 - - [07/Jun/2014:14:58:55 +0900] "GET /category/electronics HTTP/1.1" 200 128 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.6; rv:9.0.1) Gecko/20100101 Firefox/9.0.1"'
-    entity = parser.parse(line.chomp)
+    entity = parser.parse(line.chomp, format)
 
     expect = {
       remote_host:    '104.24.160.39',
