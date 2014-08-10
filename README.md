@@ -1,6 +1,6 @@
 # ApacheLog::Parser
 
-Gem to parse popular format apache log files.
+Gem to parse apache log including common, combined and customized format.
 
 ## Installation
 
@@ -21,12 +21,24 @@ Or install it yourself as:
 ```ruby
 require 'apache_log/parser'
 
-parser = ApacheLog::Parser.getParser(format)
-entity = []
+# common format
+common_log = ApacheLog::Parser.parse(log_line, 'common')
+common_log[:remote_host]    #=> remote host
+common_log[:datetime]       #=> datetime
+common_log[:request]        #=> request
 
-File.foreach(logfile) do |line|
-  entity << parser.parse(line.chomp)
-end
+# combined format
+common_log = ApacheLog::Parser.parse(log_line, 'combined')
+common_log[:referer]        #=> remote host
+common_log[:user_agent]     #=> datetime
+
+# custom format(additional fields after 'combined')
+# custom format: LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%v\" \"%{cookie}n\" %D"
+common_log = ApacheLog::Parser.parse(log_line, 'combined', %w(vhost usertrack request_duration))
+common_log[:user_agent]        #=> datetime
+common_log[:vhost]             #=> vhost
+common_log[:usertrack]         #=> usertrack
+common_log[:request_duration]  #=> request_duration
 ```
 
 The format parameter must be 'common' or 'combined'.
