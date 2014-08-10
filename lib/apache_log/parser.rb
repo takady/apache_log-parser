@@ -3,21 +3,26 @@ require "apache_log/parser/version"
 module ApacheLog
   module Parser
 
-    def self.parse(line, format)
+    def self.parse(line, format, additional_fields=[])
 
-      common_fields = %w(remote_host identity_check user datetime request status size)
+      common_fields   = %w(remote_host identity_check user datetime request status size)
       combined_fields = common_fields + %w(referer user_agent)
 
-      common_pattern   = '(\S+)\s+(\S+)\s+(\S+)\s+\[ (\d{2}\/.*?\d{4}:\d{2}:\d{2}:\d{2}\s.*?) \]\s+\" (.*?\s.*?\s.*?) \"\s+(\S+)\s+(\S+)'
-      combined_pattern = common_pattern + '\s+\" (.*?) \"\s+\" (.*?) \"'
+      common_pattern     = '(\S+)\s+(\S+)\s+(\S+)\s+\[(\d{2}\/.*\d{4}:\d{2}:\d{2}:\d{2}\s.*)\]\s+"(\S+\s\S+\s\S+)"\s+(\S+)\s+(\S+)'
+      combined_pattern   = common_pattern + '\s+"([^"]*)"\s+"([^"]*)"'
+      additional_pattern = ''
+
+      additional_fields.each do
+        additional_pattern += '\s+"?([^"]*)"?'
+      end
 
       case format
       when 'common'
-        fields = common_fields
-        pattern = /^#{common_pattern}$/x
+        fields = common_fields + additional_fields
+        pattern = /^#{common_pattern}#{additional_pattern}$/
       when 'combined'
-        fields = combined_fields
-        pattern = /^#{combined_pattern}$/x
+        fields = combined_fields + additional_fields
+        pattern = /^#{combined_pattern}#{additional_pattern}$/
       else
         raise "format error\n no such format: <#{format}> \n"
       end
