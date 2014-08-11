@@ -33,7 +33,7 @@ combined_log[:referer]        #=> referer
 combined_log[:user_agent]     #=> user_agent
 
 # custom format(additional fields after 'combined')
-# custom format: LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%v\" \"%{cookie}n\" %D"
+# e.g. "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%v\" \"%{cookie}n\" %D"
 custom_log = ApacheLog::Parser.parse(log_line, 'combined', %w(vhost usertrack request_duration))
 custom_log[:user_agent]        #=> user_agent
 custom_log[:vhost]             #=> vhost
