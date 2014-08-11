@@ -5,7 +5,6 @@ module ApacheLog
   module Parser
 
     def self.parse(line, format, additional_fields=[])
-
       common_fields   = %w(remote_host identity_check user datetime request status size)
       combined_fields = common_fields + %w(referer user_agent)
 
@@ -28,27 +27,31 @@ module ApacheLog
         raise "format error\n no such format: <#{format}> \n"
       end
 
-      match = pattern.match(line)
-      raise "parse error\n at line: <#{line}> \n" if match.nil?
+      matched = pattern.match(line)
+      raise "parse error\n at line: <#{line}> \n" if matched.nil?
 
-      columns = match.to_a
-
-      parsed_hash = {}
-      fields.each.with_index do |val, idx|
-        val = val.to_sym
-        if val == :datetime
-          parsed_hash[val] = to_datetime(columns[idx+1])
-        elsif val == :request
-          parsed_hash[val] = parse_request(columns[idx+1])
-        else
-          parsed_hash[val] = columns[idx+1]
-        end
-      end
-
-      parsed_hash
+      generate_hash(fields, matched.to_a)
     end
 
     private
+      def self.generate_hash(keys, values)
+        hash = {}
+
+        keys.each.with_index do |key, idx|
+          key = key.to_sym
+          case key
+          when :datetime
+            hash[key] = to_datetime(values[idx+1])
+          when :request
+            hash[key] = parse_request(values[idx+1])
+          else
+            hash[key] = values[idx+1]
+          end
+        end
+
+        hash
+      end
+
       def self.to_datetime(str)
         DateTime.strptime( str, '%d/%b/%Y:%T %z')
       end
