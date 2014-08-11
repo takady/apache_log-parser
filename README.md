@@ -1,5 +1,5 @@
 # ApacheLog::Parser
-
+[![Build Status](https://travis-ci.org/takady/apache_log-parser.svg?branch=master)](https://travis-ci.org/takady/apache_log-parser)
 Gem to parse apache log including common, combined and customized format.
 
 ## Installation
@@ -28,17 +28,17 @@ common_log[:datetime]       #=> datetime
 common_log[:request]        #=> request
 
 # combined format
-common_log = ApacheLog::Parser.parse(log_line, 'combined')
-common_log[:referer]        #=> referer
-common_log[:user_agent]     #=> user_agent
+combined_log = ApacheLog::Parser.parse(log_line, 'combined')
+combined_log[:referer]        #=> referer
+combined_log[:user_agent]     #=> user_agent
 
 # custom format(additional fields after 'combined')
 # custom format: LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%v\" \"%{cookie}n\" %D"
-common_log = ApacheLog::Parser.parse(log_line, 'combined', %w(vhost usertrack request_duration))
-common_log[:user_agent]        #=> user_agent
-common_log[:vhost]             #=> vhost
-common_log[:usertrack]         #=> usertrack
-common_log[:request_duration]  #=> request_duration
+custom_log = ApacheLog::Parser.parse(log_line, 'combined', %w(vhost usertrack request_duration))
+custom_log[:user_agent]        #=> user_agent
+custom_log[:vhost]             #=> vhost
+custom_log[:usertrack]         #=> usertrack
+custom_log[:request_duration]  #=> request_duration
 ```
 
 The format parameter must be 'common' or 'combined'.
