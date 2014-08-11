@@ -1,5 +1,5 @@
 # ApacheLog::Parser
-[![Build Status](https://travis-ci.org/takady/apache_log-parser.svg?branch=master)](https://travis-ci.org/takady/apache_log-parser)[![Code Climate](https://codeclimate.com/github/takady/apache_log-parser/badges/gpa.svg)](https://codeclimate.com/github/takady/apache_log-parser)
+[![Build Status](https://travis-ci.org/takady/apache_log-parser.svg?branch=master)](https://travis-ci.org/takady/apache_log-parser) [![Code Climate](https://codeclimate.com/github/takady/apache_log-parser/badges/gpa.svg)](https://codeclimate.com/github/takady/apache_log-parser)  
 Gem to parse apache log including common, combined and customized format.
 
 ## Installation
