@@ -33,37 +33,37 @@ module ApacheLog
       generate_hash(fields, matched.to_a)
     end
 
-    private
-      def self.generate_hash(keys, values)
-        hash = {}
+    def self.generate_hash(keys, values)
+      hash = {}
 
-        keys.each.with_index do |key, idx|
-          key = key.to_sym
-          case key
-          when :datetime
-            hash[key] = to_datetime(values[idx+1])
-          when :request
-            hash[key] = parse_request(values[idx+1])
-          else
-            hash[key] = values[idx+1]
-          end
+      keys.each.with_index do |key, idx|
+        key = key.to_sym
+        case key
+        when :datetime
+          hash[key] = to_datetime(values[idx+1])
+        when :request
+          hash[key] = parse_request(values[idx+1])
+        else
+          hash[key] = values[idx+1]
         end
-
-        hash
       end
 
-      def self.to_datetime(str)
-        DateTime.strptime( str, '%d/%b/%Y:%T %z')
-      end
+      hash
+    end
 
-      def self.parse_request(str)
-        method, path, protocol = str.split
-        {
-          method:   method,
-          path:     path,
-          protocol: protocol,
-        }
-      end
+    def self.to_datetime(str)
+      DateTime.strptime( str, '%d/%b/%Y:%T %z')
+    end
 
+    def self.parse_request(str)
+      method, path, protocol = str.split
+      {
+        method:   method,
+        path:     path,
+        protocol: protocol,
+      }
+    end
+
+    private_class_method :generate_hash, :to_datetime, :parse_request
   end
 end
