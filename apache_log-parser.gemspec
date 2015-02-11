@@ -7,9 +7,9 @@ Gem::Specification.new do |spec|
   spec.name          = "apache_log-parser"
   spec.version       = ApacheLog::Parser::VERSION
   spec.authors       = ["Yuichi Takada"]
-  spec.email         = ["takadyy@gmail.com"]
-  spec.summary       = "Gem to parse apache log including common, combined and customized format."
-  spec.description   = "You can parse common, combined and customized format apache log."
+  spec.email         = ["takadyuichi@gmail.com"]
+  spec.summary       = "Parse apache log including common, combined and customized format"
+  spec.description   = spec.summary
   spec.homepage      = "https://github.com/takady/apache_log-parser"
   spec.license       = "MIT"
 
