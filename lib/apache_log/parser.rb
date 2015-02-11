@@ -30,7 +30,6 @@ module ApacheLog
     def parse(line)
       matched = @pattern.match(line)
       raise "parse error\n at line: <#{line}> \n" if matched.nil?
-
       generate_hash(@fields, matched.to_a)
     end
 
@@ -39,15 +38,15 @@ module ApacheLog
     def generate_hash(keys, values)
       hash = {}
 
-      keys.each.with_index do |key, idx|
+      keys.each.with_index(1) do |key, idx|
         key = key.to_sym
         case key
         when :datetime
-          hash[key] = to_datetime(values[idx+1])
+          hash[key] = to_datetime(values[idx])
         when :request
-          hash[key] = parse_request(values[idx+1])
+          hash[key] = parse_request(values[idx])
         else
-          hash[key] = values[idx+1]
+          hash[key] = values[idx]
         end
       end
 
@@ -55,7 +54,7 @@ module ApacheLog
     end
 
     def to_datetime(str)
-      DateTime.strptime( str, '%d/%b/%Y:%T %z')
+      DateTime.strptime(str, '%d/%b/%Y:%T %z')
     end
 
     def parse_request(str)
