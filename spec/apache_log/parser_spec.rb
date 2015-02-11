@@ -18,7 +18,8 @@ describe ApacheLog::Parser do
 
   it 'can parse tab separated common format log' do
     line = "192.168.0.1\t-\t-\t[07/Feb/2011:10:59:59 +0900]\t\"GET /x/i.cgi/net/0000/ HTTP/1.1\"\t200\t9891";
-    entity = @common_parser.parse(line.chomp)
+    parser = ApacheLog::Parser.new('common')
+    entity = parser.parse(line.chomp)
     expect = {remote_host: '192.168.0.1', identity_check: '-', user: '-', datetime: DateTime.new(2011, 2, 07, 10, 59, 59, 0.375),
       request: {method: 'GET', path: '/x/i.cgi/net/0000/', protocol: 'HTTP/1.1'}, status: '200', size: '9891'}
     expect(entity).to eq(expect)
@@ -26,7 +27,7 @@ describe ApacheLog::Parser do
 
   it 'can parse combined format log' do
     line = '104.24.160.39 - - [07/Jun/2014:14:58:55 +0900] "GET /category/electronics HTTP/1.1" 200 128 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.6; rv:9.0.1) Gecko/20100101 Firefox/9.0.1"'
-    parser = ApacheLog::Parser.new('common')
+    parser = ApacheLog::Parser.new('combined')
     entity = parser.parse(line.chomp)
     expect = {remote_host: '104.24.160.39', identity_check: '-', user: '-', datetime: DateTime.new(2014, 6, 7, 14, 58, 55, 0.375),
       request: {method: 'GET', path: '/category/electronics', protocol: 'HTTP/1.1'}, status: '200', size: '128', referer: '-',
