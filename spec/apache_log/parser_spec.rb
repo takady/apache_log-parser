@@ -87,4 +87,22 @@ describe ApacheLog::Parser do
       usertrack: '192.0.2.16794832933550', mobileid: '09011112222333_xx.ezweb.ne.jp', request_duration: '533593'}
     expect(entity).to eq(expect)
   end
+
+  it 'can parse if there are any columns before ip address' do
+    line = 'foo 127.0.0.1 - - [20/May/2014:20:04:04 +0900] "GET /test/indx.html HTTP/1.1" 200 4576'
+    parser = ApacheLog::Parser.new('common')
+    entity = parser.parse(line.chomp)
+    expect = {remote_host: '127.0.0.1', identity_check: '-', user: '-', datetime: DateTime.new(2014, 5, 20, 20, 04, 04, 0.375),
+      request: {method: 'GET', path: '/test/indx.html', protocol: 'HTTP/1.1'}, status: '200', size: '4576'}
+    expect(entity).to eq(expect)
+  end
+
+  it 'can parse if there are any columns before ip address' do
+    line = '200 127.0.0.1 - - [20/May/2014:20:04:04 +0900] "GET /test/indx.html HTTP/1.1" 200 4576'
+    parser = ApacheLog::Parser.new('common')
+    entity = parser.parse(line.chomp)
+    expect = {remote_host: '127.0.0.1', identity_check: '-', user: '-', datetime: DateTime.new(2014, 5, 20, 20, 04, 04, 0.375),
+      request: {method: 'GET', path: '/test/indx.html', protocol: 'HTTP/1.1'}, status: '200', size: '4576'}
+    expect(entity).to eq(expect)
+  end
 end
