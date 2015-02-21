@@ -88,7 +88,7 @@ describe ApacheLog::Parser do
     expect(entity).to eq(expect)
   end
 
-  it 'can parse even if there are any columns before ip address' do
+  it 'can parse even if there are any columns at the beginning of line' do
     line = 'foo 127.0.0.1 - - [20/May/2014:20:04:04 +0900] "GET /test/indx.html HTTP/1.1" 200 4576'
     parser = ApacheLog::Parser.new('common')
     entity = parser.parse(line.chomp)
@@ -97,7 +97,7 @@ describe ApacheLog::Parser do
     expect(entity).to eq(expect)
   end
 
-  it 'can parse even if there are any columns before ip address' do
+  it 'can parse even if there are any columns at the beginning of line' do
     line = '200 127.0.0.1 - - [20/May/2014:20:04:04 +0900] "GET /test/indx.html HTTP/1.1" 200 4576'
     parser = ApacheLog::Parser.new('common')
     entity = parser.parse(line.chomp)
@@ -106,7 +106,7 @@ describe ApacheLog::Parser do
     expect(entity).to eq(expect)
   end
 
-  it 'can parse even if there are any columns before ip address' do
+  it 'can parse even if there are any columns at the beginning of line' do
     line = '200 foo 192.168.0.1 - - [07/Jun/2014:14:58:55 +0900] "GET /category/electronics HTTP/1.1" 200 128 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.6; rv:9.0.1) Gecko/20100101 Firefox/9.0.1"'
     parser = ApacheLog::Parser.new('combined')
     entity = parser.parse(line.chomp)
@@ -116,7 +116,7 @@ describe ApacheLog::Parser do
     expect(entity).to eq(expect)
   end
 
-  it 'can parse even if there are any columns after combined columns' do
+  it 'can parse even if there are any columns at the end of line' do
     line = '192.168.0.1 - - [07/Jun/2014:14:58:55 +0900] "GET /category/electronics HTTP/1.1" 200 128 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.6; rv:9.0.1) Gecko/20100101 Firefox/9.0.1"'
     parser = ApacheLog::Parser.new('combined')
     entity = parser.parse(line.chomp)
