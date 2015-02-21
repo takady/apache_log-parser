@@ -115,4 +115,14 @@ describe ApacheLog::Parser do
       user_agent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.6; rv:9.0.1) Gecko/20100101 Firefox/9.0.1'}
     expect(entity).to eq(expect)
   end
+
+  it 'can parse even if there are any columns after combined columns' do
+    line = '192.168.0.1 - - [07/Jun/2014:14:58:55 +0900] "GET /category/electronics HTTP/1.1" 200 128 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.6; rv:9.0.1) Gecko/20100101 Firefox/9.0.1"'
+    parser = ApacheLog::Parser.new('combined')
+    entity = parser.parse(line.chomp)
+    expect = {remote_host: '192.168.0.1', identity_check: '-', user: '-', datetime: DateTime.new(2014, 6, 7, 14, 58, 55, 0.375),
+      request: {method: 'GET', path: '/category/electronics', protocol: 'HTTP/1.1'}, status: '200', size: '128', referer: '-',
+      user_agent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.6; rv:9.0.1) Gecko/20100101 Firefox/9.0.1'}
+    expect(entity).to eq(expect)
+  end
 end
