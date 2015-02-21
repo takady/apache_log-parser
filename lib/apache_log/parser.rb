@@ -18,10 +18,10 @@ module ApacheLog
       case format
       when 'common'
         @fields = common_fields + additional_fields
-        @pattern = /#{common_pattern}#{additional_pattern}$/
+        @pattern = /#{common_pattern}#{additional_pattern}/
       when 'combined'
         @fields = combined_fields + additional_fields
-        @pattern = /#{combined_pattern}#{additional_pattern}$/
+        @pattern = /#{combined_pattern}#{additional_pattern}/
       else
         raise "format error\n no such format: <#{format}> \n"
       end
