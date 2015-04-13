@@ -16,6 +16,15 @@ describe ApacheLog::Parser do
     expect(entity).to eq(expect)
   end
 
+  it 'can parse ipv6 common format log' do
+    line = '::1 - - [20/May/2014:20:04:04 +0900] "GET /test/indx.html HTTP/1.1" 200 4576'
+    parser = ApacheLog::Parser.new('common')
+    entity = parser.parse(line.chomp)
+    expect = {remote_host: '::1', identity_check: '-', user: '-', datetime: DateTime.new(2014, 5, 20, 20, 04, 04, 0.375),
+      request: {method: 'GET', path: '/test/indx.html', protocol: 'HTTP/1.1'}, status: '200', size: '4576'}
+    expect(entity).to eq(expect)
+  end
+
   it 'can parse tab separated common format log' do
     line = "192.168.0.1\t-\t-\t[07/Feb/2011:10:59:59 +0900]\t\"GET /x/i.cgi/net/0000/ HTTP/1.1\"\t200\t9891";
     parser = ApacheLog::Parser.new('common')

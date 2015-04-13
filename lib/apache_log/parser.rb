@@ -7,7 +7,7 @@ module ApacheLog
       common_fields   = %w(remote_host identity_check user datetime request status size)
       combined_fields = common_fields + %w(referer user_agent)
 
-      common_pattern     = '(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+(\S+)\s+(\S+)\s+\[(\d{2}\/.*\d{4}:\d{2}:\d{2}:\d{2}\s.*)\]\s+"(\S+\s\S+\s\S+)"\s+(\S+)\s+(\S+)'
+      common_pattern     = '(?:^|\s)((?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|(?:[\w:]+?))\s+(\S+)\s+(\S+)\s+\[(\d{2}\/.*\d{4}:\d{2}:\d{2}:\d{2}\s.*)\]\s+"(\S+\s\S+\s\S+)"\s+(\S+)\s+(\S+)'
       combined_pattern   = common_pattern + '\s+"([^"]*)"\s+"([^"]*)"'
       additional_pattern = ''
 
