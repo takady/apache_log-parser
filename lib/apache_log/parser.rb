@@ -3,27 +3,39 @@ require 'date'
 
 module ApacheLog
   class Parser
-    COMMON_FIELDS = %w(remote_host identity_check user datetime request status size)
-    COMBINED_FIELDS = COMMON_FIELDS + %w(referer user_agent)
+    COMMON_FIELDS = %i[remote_host identity_check user datetime request status size]
+    COMBINED_FIELDS = COMMON_FIELDS + %i[referer user_agent]
 
-    COMMON_PATTERN = '(?:^|\s)((?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|(?:[\w:]+?))\s+(\S+)\s+(\S+)\s+\[(\d{2}\/.*\d{4}:\d{2}:\d{2}:\d{2}\s.*)\]\s+"(.*?)"\s+(\S+)\s+(\S+)'
-    COMBINED_PATTERN = COMMON_PATTERN + '\s+"(.*?[^\\\\])"\s+"(.*?[^\\\\])"'
+    BAREWORD = '(\S+)'
+    QUOTED = '"(.*?[^\\\\]|)"'
+
+    PATTERNS = {
+      remote_host: '((?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|(?:[\w:]+?))',
+      identity_check: BAREWORD,
+      user: BAREWORD,
+      datetime: '\[(\d{2}\/.*\d{4}:\d{2}:\d{2}:\d{2}\s.*)\]',
+      request: QUOTED,
+      status: BAREWORD,
+      size: BAREWORD,
+      referer: QUOTED,
+      user_agent: QUOTED
+    }
+
     ADDITIONAL_PATTERN = '\s+"?([^"]*)"?'
 
-    def initialize(format, additional_fields=[])
-      additional_pattern = ''
-      additional_pattern << ADDITIONAL_PATTERN * additional_fields.size
+    def initialize(format, additional_fields = [])
+      additional_pattern = ADDITIONAL_PATTERN * additional_fields.size
 
-      case format
-      when 'common'
-        @fields = COMMON_FIELDS + additional_fields
-        @pattern = /#{COMMON_PATTERN}#{additional_pattern}/
-      when 'combined'
-        @fields = COMBINED_FIELDS + additional_fields
-        @pattern = /#{COMBINED_PATTERN}#{additional_pattern}/
-      else
-        raise "format error\n no such format: <#{format}> \n"
-      end
+      base_fields = case format.to_s
+                    when 'common' then COMMON_FIELDS
+                    when 'combined' then COMBINED_FIELDS
+                    else raise "format error\n no such format: <#{format}> \n"
+                    end
+
+      base_pattern = '(?:^|\s)' + base_fields.map { |f| PATTERNS[f] }.join('\s+')
+
+      @fields = base_fields + additional_fields.map(&:to_sym)
+      @pattern = /#{base_pattern}#{additional_pattern}/
     end
 
     def parse(line)
@@ -38,16 +50,11 @@ module ApacheLog
 
     def generate_hash(keys, values)
       keys.each.with_index(1).each_with_object({}) do |(key, i), hash|
-        key = key.to_sym
-
-        case key
-        when :datetime
-          hash[key] = to_datetime(values[i])
-        when :request
-          hash[key] = parse_request(values[i])
-        else
-          hash[key] = values[i]
-        end
+        hash[key] = case key
+                    when :datetime then to_datetime(values[i])
+                    when :request then parse_request(values[i])
+                    else values[i]
+                    end
       end
     end
 
