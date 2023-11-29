@@ -7,7 +7,7 @@ module ApacheLog
     COMBINED_FIELDS = COMMON_FIELDS + %w(referer user_agent)
 
     COMMON_PATTERN = '(?:^|\s)((?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|(?:[\w:]+?))\s+(\S+)\s+(\S+)\s+\[(\d{2}\/.*\d{4}:\d{2}:\d{2}:\d{2}\s.*)\]\s+"(.*?)"\s+(\S+)\s+(\S+)'
-    COMBINED_PATTERN = COMMON_PATTERN + '\s+"(.*?[^\\\\])"\s+"(.*?[^\\\\])"'
+    COMBINED_PATTERN = COMMON_PATTERN + '\s+"(.*?[^\\\\]|)"\s+"(.*?[^\\\\]|)"'
     ADDITIONAL_PATTERN = '\s+"?([^"]*)"?'
 
     def initialize(format, additional_fields=[])
