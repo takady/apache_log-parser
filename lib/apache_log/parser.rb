@@ -23,8 +23,8 @@ module ApacheLog
 
     ADDITIONAL_PATTERN = '\s+"?([^"]*)"?'
 
-    def initialize(format, additional_fields=[])
-      additional_pattern = '' + (ADDITIONAL_PATTERN * additional_fields.size)
+    def initialize(format, additional_fields = [])
+      additional_pattern = ADDITIONAL_PATTERN * additional_fields.size
 
       base_fields = case format.to_s
                     when 'common' then COMMON_FIELDS
@@ -33,6 +33,7 @@ module ApacheLog
                     end
 
       base_pattern = base_fields.map { |f| PATTERNS[f] }.join('\s+')
+
       @fields = base_fields + additional_fields.map(&:to_sym)
       @pattern = /#{base_pattern}#{additional_pattern}/
     end
@@ -49,14 +50,11 @@ module ApacheLog
 
     def generate_hash(keys, values)
       keys.each.with_index(1).each_with_object({}) do |(key, i), hash|
-        case key
-        when :datetime
-          hash[key] = to_datetime(values[i])
-        when :request
-          hash[key] = parse_request(values[i])
-        else
-          hash[key] = values[i]
-        end
+        hash[key] = case key
+                    when :datetime then to_datetime(values[i])
+                    when :request then parse_request(values[i])
+                    else values[i]
+                    end
       end
     end
 
