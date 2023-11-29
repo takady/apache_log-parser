@@ -10,7 +10,7 @@ module ApacheLog
     QUOTED = '"(.*?[^\\\\]|)"'
 
     PATTERNS = {
-      remote_host: '(?:^|\s)((?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|(?:[\w:]+?))',
+      remote_host: '((?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|(?:[\w:]+?))',
       identity_check: BAREWORD,
       user: BAREWORD,
       datetime: '\[(\d{2}\/.*\d{4}:\d{2}:\d{2}:\d{2}\s.*)\]',
@@ -32,7 +32,7 @@ module ApacheLog
                     else raise "format error\n no such format: <#{format}> \n"
                     end
 
-      base_pattern = base_fields.map { |f| PATTERNS[f] }.join('\s+')
+      base_pattern = '(?:^|\s)' + base_fields.map { |f| PATTERNS[f] }.join('\s+')
 
       @fields = base_fields + additional_fields.map(&:to_sym)
       @pattern = /#{base_pattern}#{additional_pattern}/
